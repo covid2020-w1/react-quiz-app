@@ -1,3 +1,16 @@
+input[type="radio"]{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+
+label{
+  margin-right: 16px;
+  background-color: lightgray;
+}
+
 /* #root {
   max-width: 1280px;
   margin: 0 auto;
