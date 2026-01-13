@@ -1,40 +1,55 @@
 import './App.css'
 import Question from './Question.jsx'
+import { useState } from 'react'
+import questionsArr from './questionsArr.js'
+
 
 export default function App(){
 
-  const questionsArr = []
-  const optionObj = {
-    text: "hello",
-    isChecked: false,
-    isCorrect: false  
+  console.log(questionsArr)
+
+  const [questions, setQuestions] = useState(questionsArr)
+
+  //so now i need to add a block that turns every other 
+  function checkGuess(questionIndex, optionIndex){
+    setQuestions(prevQuestions => 
+      prevQuestions.map(prevQuestion => {
+        if(prevQuestion.index === questionIndex){
+          return ({
+            ...prevQuestion,
+            options: prevQuestion.options.map(option => {
+              if(option.index === optionIndex){
+                return {...option, isChecked: !option.isChecked}
+              }else{
+                return {...option, isChecked: false}
+              }
+            })
+          })
+        }else{
+          return prevQuestion
+        }
+      })
+    )
   }
 
-
-  for(let i=0; i<5; i++){
-    const optionsArr = []
-    for(let j=0; j<4; j++){
-      if(j===0){
-        optionsArr.push({...optionObj, isCorrect: true})
-      }else{
-        optionsArr.push({...optionObj})
-      }
-    }
-
-    questionsArr.push({
-      text: "world",
-      options: optionsArr
-    })
-  }
-
-  const questionElements = questionsArr.map((question, index) =>
-    <Question key={index} question={question}/>
+  const questionElements = questions.map(question =>
+    <Question 
+      key={question.index} 
+      text={question.text} 
+      options={question.options}
+      name={`Question ${question.index + 1}`}
+      checkGuess={(optionIndex) => checkGuess(question.index, optionIndex)}
+    />
   )
 
+
   return(
-    <form>
-      {questionElements}
-    </form>
+    <main>
+      <form>
+        {questionElements}
+      </form>
+      <p>total score: </p>
+    </main>
   )
 }
 

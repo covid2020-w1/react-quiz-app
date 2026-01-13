@@ -1,8 +1,19 @@
+import clsx from 'clsx'
+
 export default function Option(props){
     return(
-        <label>
-            <input type="radio"/>
-            {props.option.text}
+        <label
+            className = {clsx(
+                props.isChecked && props.isCorrect && "correct",
+                props.isChecked && !props.isCorrect && "incorrect" 
+            )}
+        >
+            <input 
+                type="radio" 
+                name={props.name}
+                onChange={ props.checkGuess }
+            />
+            {props.text}
         </label>
     )
 }

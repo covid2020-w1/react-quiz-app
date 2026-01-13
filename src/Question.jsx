@@ -3,13 +3,21 @@ import Option from './Option.jsx'
 export default function Question(props){
     // console.log("hello", props)
 
-    const optionElements = props.question.options.map((option, index) =>
-        <Option key={index} option={option}/>
+    const optionElements = props.options.map((option) =>
+        <Option 
+            key={option.index}
+            index={option.index} 
+            text={option.text} 
+            isChecked={option.isChecked}
+            isCorrect={option.isCorrect}
+            name={props.name}
+            checkGuess={() => props.checkGuess(option.index)}
+        />
     )
 
     return(
         <fieldset>
-            <legend>{props.question.text}</legend>
+            <legend>{props.text}</legend>
             {optionElements}
         </fieldset>
     )
