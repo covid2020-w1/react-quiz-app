@@ -10,6 +10,7 @@ export default function Question(props){
             text={option.text} 
             isChecked={option.isChecked}
             isCorrect={option.isCorrect}
+            disabled={option.disabled}
             name={props.name}
             checkGuess={() => props.checkGuess(option.index)}
         />

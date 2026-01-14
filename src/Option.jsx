@@ -12,6 +12,7 @@ export default function Option(props){
                 type="radio" 
                 name={props.name}
                 onChange={ props.checkGuess }
+                disabled={props.disabled}
             />
             {props.text}
         </label>
