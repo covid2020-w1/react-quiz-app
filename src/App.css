@@ -1,7 +1,98 @@
+html{
+  color: #293264;
+  font-family: Inter;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+body{
+  margin: 0;
+  height: 100%;
+}
+
+#root{
+  background-color: #F5F7FB;
+  margin: 0;
+  display: flex;
+  height: 100%;
+}
+
+main{
+  padding: 2rem 1rem;
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+legend{
+  font-family: Karla;
+  font-weight: 700;
+  margin-bottom: .5em;
+}
+
+fieldset{
+  border: none;
+  padding: 0;
+}
+
 .correct{
-  background-color: green;
+  background-color: #94D7A2;
+  border: none;
 }
 
 .incorrect{
-  background-color: red;
+  background-color: #F8BCBC;
+  border: none;
+}
+
+.disabledButCorrect{
+  border: 2px solid #94D7A2;
+}
+
+input[type="radio"]{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+label{
+  border: 1px solid #4D5B9E;
+  padding: .4em 1em;
+  min-width: 48px;
+  display: flex;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: .625rem;
+  cursor: pointer;
+}
+
+label:hover{
+  opacity: 70%;
+}
+
+.option-container{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button{
+  max-width: 100px;
+  align-self: center;
+  font-family: Inter;
+  font-weight: 600;
+  font-size: .625rem;
+  background-color: #4D5B9E;
+  color: #F5F7FB;
+  border: none;
+  padding: .5em 2em;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover{
+  opacity: 80%;
 }

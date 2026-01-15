@@ -14,54 +14,39 @@ export default function App(){
 
   //does each question contain any options with isChecked = true?
 
+  function generateApiData(){
+    fetch("https://opentdb.com/api.php?amount=5")
+      .then(res => res.json())
+      .then(data => 
+        
+      setQuestions(data.results.map((question, index) =>{
+
+      const allOptions = [...question.incorrect_answers]
+      const ranIndex = Math.floor(Math.random() * 4)
+      allOptions.splice(ranIndex, 0, question.correct_answer)
+
+      return{
+        index: index,
+        text: question.question,
+        options: allOptions.map((option, index) =>
+        ({
+          index: index,
+          text: option,
+          isChecked: false,
+          isCorrect: option === question.correct_answer,
+          disabled: false
+        })
+        )
+      }
+    }
+    ))
+    )
+  }
+  
+
   useEffect(
-    () => 
-      fetch("https://opentdb.com/api.php?amount=5")
-        .then(res => res.json())
-        .then(data => {
-
-            //in essence, what were doing here is mapping over the array into a more helpful shape. however, the options array is only partially correct-- it only contains incorrect answers. so we map over the questions array again, and for each options array, we randomly splice in a a new object whose correctness is true. then we chain map methods so that the options array now has an index property. and this new array is what we set state to. so on first render, we paint the ui and then use the effect, which updates state and causes a rerender of the page
-            const arr = data.results.map((question, index) => ({
-            index: index,
-            text: question.question,
-            options: question.incorrect_answers.map((optionText) => {
-              return {
-                text: optionText,
-                isChecked: false,
-                isCorrect: false,
-                disabled: false  
-              }
-            })
-            }))
-
-            setQuestions(arr.map(question => 
-              ({
-                ...question, 
-                options: options.splice(
-                  Math.floor(Math.random() * (options.length + 1)), 
-                  0,
-                  {
-                    text: question.correct_answer,
-                    isChecked: false,
-                    isCorrect: true,
-                    disabled: false
-                  }
-                )
-              })
-            ).map(question =>
-              ({
-                ...question,
-                options: options.map((option, index) => 
-                  ({
-                    ...option,
-                    index: index
-                  })
-                )
-              })
-            ))
-        }
-        ),
-        []
+    () => generateApiData(),
+    []
   )
 
 
@@ -80,17 +65,19 @@ export default function App(){
   console.log(questionsAnswered)
 
   //so now i need to add a block that turns every other 
+  //if the question contains a checked answer but the checked answer isn't correct, then green outline the correct answer. can i do this without creating a new property for option? well to style it, im going to need a new class, and a clsx that will brand it in response to a unique input
   function checkGuess(questionIndex, optionIndex){
     setQuestions(prevQuestions => 
       prevQuestions.map(prevQuestion => {
         if(prevQuestion.index === questionIndex){
           return ({
             ...prevQuestion,
+            //this loop is finding the option that was clicked. it is flipping the isChecked property to true, which triggers the clsx to kick in. so now i need another function that checks if question.options.some(option => option.checked) && !question.options.filter(option => option.isCorrect)[0].isChecked. if so, then take some variable like correctAndUnchecked and set it to true. i guess technically another way is to leave the checked version undisabled, and then apply a clsx that says isDisabled && isCorrect
             options: prevQuestion.options.map(option => {
               if(option.index === optionIndex){
-                return {...option, isChecked: !option.isChecked, disabled: true}
+                return {...option, isChecked: !option.isChecked}
               }else{
-                return {...option, isChecked: false, disabled: true}
+                return {...option, isDisabled: true}
               }
             })
           })
@@ -101,8 +88,9 @@ export default function App(){
     )
   }
 
-  function startNewGame(){
-    setQuestions(generateQuestions)
+  function startNewGame(e){
+    e.preventDefault()
+    generateApiData()
   }
 
   const questionElements = questions.map(question =>
@@ -118,9 +106,9 @@ export default function App(){
 
   return(
     <main>
-      <form action={startNewGame}>
+      <form onSubmit={startNewGame}>
         {questionElements}
-        {questionsAnswered > 4 && <button type="submit">dd</button>}
+        {questionsAnswered > 4 && <button type="submit">Play Again</button>}
       </form>
       <p>Score: {questionsAnsweredCorrectly}/5</p>
     </main>

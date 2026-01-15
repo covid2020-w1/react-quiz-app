@@ -1,4 +1,5 @@
 import Option from './Option.jsx'
+import he from 'he'
 
 export default function Question(props){
     // console.log("hello", props)
@@ -10,7 +11,7 @@ export default function Question(props){
             text={option.text} 
             isChecked={option.isChecked}
             isCorrect={option.isCorrect}
-            disabled={option.disabled}
+            isDisabled={option.isDisabled}
             name={props.name}
             checkGuess={() => props.checkGuess(option.index)}
         />
@@ -18,8 +19,10 @@ export default function Question(props){
 
     return(
         <fieldset>
-            <legend>{props.text}</legend>
-            {optionElements}
+            <legend>{he.decode(props.text)}</legend>
+            <div className="option-container">
+                {optionElements}
+            </div>
         </fieldset>
     )
 }
