@@ -1,5 +1,5 @@
   
-  export default function generateQuestions(){
+  export default function generatePlaceholderText(){
     const questionsArr = []
     const optionObj = {
       text: "option",

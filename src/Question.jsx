@@ -2,7 +2,6 @@ import Option from './Option.jsx'
 import he from 'he'
 
 export default function Question(props){
-    // console.log("hello", props)
 
     const optionElements = props.options.map((option) =>
         <Option 

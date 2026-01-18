@@ -13,7 +13,7 @@ export default function Option(props){
             <input 
                 type="radio" 
                 name={props.name}
-                onChange={ props.checkGuess }
+                onChange={props.checkGuess}
                 disabled={props.isDisabled}
                 checked={props.isChecked}
             />

@@ -1,13 +1,13 @@
 import './App.css'
 import Question from './Question.jsx'
 import { useState, useEffect } from 'react'
-import generateQuestions from './questionsArr.js'
+import generatePlaceholderText from './generatePlaceholderText.js'
 
 
 export default function App(){
 
   //state values
-  const [questions, setQuestions] = useState(generateQuestions)
+  const [questions, setQuestions] = useState([])
   const [showQuestions, setShowQuestions] = useState(false);
 
   //derived values
@@ -15,6 +15,7 @@ export default function App(){
   let questionsAnsweredCorrectly = 0
 
   //functions
+  //fetch the data, map over each question. for each question, randomly insert the correct_answer string into the array of incorrect_answer strings. then, for each question, return an object that contains the index of the question, the text, and an array of options. for that array, map over the array of all questions, returning an array with index, text, isChecked, isCorrect, and isDisabled. for isCorrect, evaluate whether the correct_answer of the current question being mapped is equal to the current option being mapped.
   function generateApiData(){
     fetch("https://opentdb.com/api.php?amount=5")
       .then(res => res.json())
@@ -43,12 +44,13 @@ export default function App(){
       )
   }
   
-
+  //i think im using this right, but i honestly dont know. do i leave the array empty?
   useEffect(
     () => generateApiData(),
     []
   )
 
+  //calculate the number of questions answered and questions answered correctly
   questions.forEach(question => {
     if(question.options.some(option => option.isChecked)){
       questionsAnswered++
@@ -62,6 +64,7 @@ export default function App(){
     setShowQuestions(true)
   }
 
+  //in this function, were passing parameters that were getting from options laced with an eventlistener. in the function we map through each question, and if the question.index matches the questionIndex, we return an object where we just modify the options, where we map through each option and check if option.index matches the optionIndex that was passed from the event listener of the option that was clicked. if it matches, then flip the value of isDisabled, which triggers a clsx on the option component. for the options that dont match, disable it.
   function checkGuess(questionIndex, optionIndex){
     setQuestions(prevQuestions => 
       prevQuestions.map(prevQuestion => {
@@ -83,11 +86,13 @@ export default function App(){
     )
   }
 
+  //not sure what preventdefault does here, just know you need it
   function startNewGame(e){
     e.preventDefault()
     generateApiData()
   }
 
+  //this is where you import the question component and set its props. for the checkGuess fn, by passing an arrow function, we can curry it, meaning we pass the question index to this function now, and defer the optionIndex argument until later
   const questionElements = questions.map(question =>
     <Question 
       key={question.index} 
@@ -97,6 +102,7 @@ export default function App(){
       checkGuess={(optionIndex) => checkGuess(question.index, optionIndex)}
     />
   )
+
 
   if(showQuestions){
     return(
